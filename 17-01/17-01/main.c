@@ -278,6 +278,14 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
 bool delete_item(GoodsList *L, char* goods_id) {
      GoodsList *pre = L, *p = L->next;
       /* 补充代码*/
+    while(p->data.goods_id!=goods_id) {
+        pre=pre->next;
+        p=pre->next;
+    }
+    pre->next=p->next;
+    free(p);
+    
+    return true;
 }
 
 
@@ -404,119 +412,3 @@ GoodsInfo read_goods_info(){
     return goodsInfo;
 }
 
-
-
-
-
-////
-////  main.c
-////  17-01
-////
-////  Created by HakuBill on 2020/11/26.
-////
-//
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <stdbool.h>
-//#include <string.h>
-//#include "lab52.h"
-//
-//extern int CurrentCnt;
-//
-//void init_list(GoodsList **L) {
-//    freopen(GOODS_FILE_NAME, "w", stdin);
-//
-//    GoodsList *HeadNode = (GoodsList*)malloc(sizeof(HeadNode));
-//
-//    HeadNode->data.goods_amount=0;
-//    strcpy(HeadNode->data.goods_discount,"");
-//    HeadNode->data.goods_remain=0;
-//    HeadNode->data.goods_price=0;
-//    strcpy(HeadNode->data.goods_id,"");
-//    strcpy(HeadNode->data.goods_name,"");
-//    HeadNode->next = NULL;
-//
-//    int amount,remain,price;
-//    char discount[MAX_DISCOUNT_LEN];
-//    char id[MAX_ID_LEN];
-//    char name[MAX_NAME_LEN];
-//
-//    GoodsList *currentNode=(GoodsList*)HeadNode;
-//    *L=currentNode;
-//    while(scanf("%s%s%d%s%d%d",&id,&name,&price,&discount,&amount,&remain)!=EOF) {
-//
-//        strcpy(currentNode->data.goods_id,id);
-//        strcpy(currentNode->data.goods_name,name);
-//        currentNode->data.goods_price=price;
-//        strcpy(currentNode->data.goods_discount,discount);
-//        currentNode->data.goods_amount=amount;
-//        currentNode->data.goods_remain=remain;
-//
-//        currentNode->next=(GoodsList*)malloc(sizeof(GoodsList));
-//        currentNode=currentNode->next;
-//    }
-//
-//    currentNode=currentNode->next;
-//}
-//
-//bool insert_item(GoodsList *L,GoodsInfo goodsInfo, int choice) {
-//
-//    return true;
-//}
-//
-//int main(int argc, const char * argv[]) {
-//    int input;
-//    GoodsList *L = NULL;
-//    int goods_id;
-//    GoodsInfo item;
-//    GoodsInfo new_info;
-//    GoodsList **pL = NULL;
-//    char* goods_ids=NULL;
-//    char str[1000];
-//    int choice = 0;
-//    int n = 0;
-//    init_list(pL);
-//    while(1) {
-//        scanf("%d",&input);
-//        getchar();
-//        printf("1.显示所有商品的信息\n2.修改某个商品的信息\n3.插入某个商品的信息\n4.删除某个商品的信息\n5.查找某个商品的信息\n6.商品存盘并退出系统\n7.对商品价格进行排序\n8.(慎用)删除所有内容\n其他.不存盘并退出系统\n");
-//        switch (input) {
-//            case 1: {
-//                output_all_items(L);
-//            }
-//                break;
-//            case 2:
-//                goods_id = read_line(str,n);
-//                change_item(L,goods_ids,new_info);
-//                break;
-//            case 3:
-//                item = read_goods_info();
-//                insert_item(L,item,choice);
-//                break;
-//            case 4:
-//                goods_id=read_line(str,n);
-//                delete_item(L,goods_ids);
-//                break;
-//            case 5:
-//                goods_id=read_line(str,n);
-//                search_item(L,goods_ids);
-//                break;
-//            case 6:
-//                save_to_file(L);
-//                return 0;
-//                break;
-//            case 7:
-//                bubble_sort(L);
-//                break;
-//            case 8:
-//                destory_list_and_file(pL);
-//                destory_list(pL);
-//                break;
-//            default:
-//                destory_list(pL);
-//                return 0;
-//                break;
-//        }
-//    }
-//    return 0;
-//}
