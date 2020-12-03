@@ -295,6 +295,8 @@ bool delete_item(GoodsList *L, char* goods_id) {
 GoodsList* search_item(GoodsList *L, char* goods_id) {
     GoodsList *p = L->next;
     /* 补充代码*/
+    
+    return true;
 }
 
 
@@ -305,6 +307,7 @@ bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
      GoodsList *p = L->next;
      GoodsList *ptarget = search_item(L, goods_id);
      /* 补充代码*/
+    return true;
 }
 
 
