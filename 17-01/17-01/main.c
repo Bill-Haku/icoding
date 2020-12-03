@@ -1,0 +1,522 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+#include <stdbool.h>
+
+#include <ctype.h>
+
+
+#define MAX 100
+
+#define GOODS_FILE_NAME "goodsinfo.txt"
+
+
+#define MAX_ID_LEN 30
+
+#define MAX_NAME_LEN 30
+
+#define MAX_PRICE_LEN 30
+
+#define MAX_DISCOUNT_LEN 30
+
+
+typedef struct {
+    char    goods_id[MAX_ID_LEN];
+    char    goods_name[MAX_NAME_LEN];
+    int     goods_price;
+    char    goods_discount[MAX_DISCOUNT_LEN];
+    int     goods_amount;
+    int     goods_remain;
+} GoodsInfo;
+
+typedef struct node
+{
+    GoodsInfo data;
+    struct node *next;
+} GoodsList;
+
+
+//全局变量，存储当前商品的数量
+int CurrentCnt;
+
+GoodsInfo read_goods_info();
+void init_list(GoodsList **pL);
+void destory_list(GoodsList **pL);
+void destory_list_and_file(GoodsList **pL);
+int save_to_file(GoodsList *L);
+void output_one_item(GoodsList *L);
+void output_all_items(GoodsList *L);
+bool insert_item(GoodsList *L, GoodsInfo item, int choice);
+bool delete_item(GoodsList *L, char* goods_id);
+GoodsList* search_item(GoodsList *L, char* goods_id);
+bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info);
+void bubble_sort(GoodsList *L);
+
+
+int read_line(char str[], int n)
+{
+    int ch, i = 0;
+
+    while (isspace(ch = getchar()))
+        ;
+    while (ch != '\n' && ch != EOF) {
+        if (i < n)
+            str[i++] = ch;
+        ch = getchar();
+    }
+    str[i] = '\0';
+    return i;
+}
+
+/**********************************************************
+ * main
+ **********************************************************/
+int main(void)
+{
+    GoodsList *goodsList;
+    init_list(&goodsList);
+    GoodsInfo item;
+    char temp_id[MAX_ID_LEN];
+    while (1) {
+    int choice;
+    printf("超市商品管理系统\n");
+    printf("********************************************\n");
+    printf("1.显示所有商品的信息:\n");
+    printf("2.修改某个商品的信息:\n");
+    printf("3.插入某个商品的信息:\n");
+    printf("4.删除某个商品的信息:\n");
+    printf("5.查找某个商品的信息:\n");
+    printf("6.商品存盘并退出系统:\n");
+    printf("7.对商品价格进行排序:\n");
+    printf("8.(慎用)删除所有内容:\n");
+    printf("其他.不存盘并退出系统:\n");
+    printf("********************************************\n");
+    printf("输入您的选择: ");
+
+    scanf("%d", &choice);
+    switch (choice) {
+      case 1:
+         /* 补充代码*/
+      case 2:
+        item = read_goods_info();
+        printf("输入要修改记录的 ID：");
+         /* 补充代码read_line调用*/
+         /* 补充代码change_item调用*/
+        break;
+        case 3:
+        item = read_goods_info();
+        int pos;
+        printf("输入数字表明你要插入的商品位置：0.商品列表尾部 1.商品列表头部 i.商品列表中间第i号位置\n");
+        scanf("%d", &pos);
+         /* 补充代码insert_item调用*/
+        break;
+      case 4:
+        printf("输入要删除记录的 ID：");
+         /* 补充代码read_line调用*/
+         /* 补充代码delete_item调用*/
+        break;
+      case 5:
+        printf("输入要删除记录的 ID：");
+         /* 补充代码read_line调用*/
+         /* 补充代码search_item调用*/
+        break;
+      case 6:
+         /* 补充代码save_to_file调用*/
+        printf("您已经存盘并退出超市商品管理系统!\n");
+        return 0;
+      case 7:
+         /* 补充代码bubble_sort调用*/
+        break;
+      case 8:
+        /* 补充代码destory_list_and_file调用*/
+        printf("您已经删除商品文件内容以及链表内容!\n");
+        break;
+      default:
+        /* 补充代码destory_lis调用*/
+        printf("您已经退出超市商品管理系统!\n");
+        return 0;
+    }
+    }
+}
+
+/**********************************************************
+ * init_list
+ **********************************************************/
+void init_list(GoodsList **L) {
+    FILE *fp;
+    GoodsInfo goodsInfo;
+    GoodsList *p, *r;
+
+    (*L) = (GoodsList *)malloc(sizeof(GoodsList));
+    r = (*L);
+    if ((fp = fopen(GOODS_FILE_NAME, "r")) == NULL)
+    {
+        if ((fp = fopen(GOODS_FILE_NAME, "w")) == NULL)
+    printf("提示：不能创建商品文件\n");
+    }
+    else {
+        while (!feof(fp))
+        {
+            fscanf(fp, "%s", goodsInfo.goods_id);
+            /* 仿写fscanf完成goodsInfo其他部分的内容*/
+            fscanf(fp, "%s", goodsInfo.goods_name);
+            fscanf(fp, "%d", goodsInfo.goods_price);
+            fscanf(fp, "%s", goodsInfo.goods_discount);
+            fscanf(fp, "%d", goodsInfo.goods_amount);
+            fscanf(fp, "%d", goodsInfo.goods_remain);
+            p = (GoodsList*)malloc(sizeof(GoodsList));
+            /* 完成GoodsList的构建*/
+            
+            strcpy(r->data.goods_id, goodsInfo.goods_id);
+            strcpy(r->data.goods_name, goodsInfo.goods_name);
+            r->data.goods_price=goodsInfo.goods_price;
+            strcpy(r->data.goods_discount, goodsInfo.goods_discount);
+            r->data.goods_amount=goodsInfo.goods_amount;
+            r->data.goods_remain=goodsInfo.goods_remain;
+            
+            r->next=(GoodsList*)malloc(sizeof(GoodsList));
+            r=r->next;
+            CurrentCnt++;
+        }
+    }
+    fclose(fp);
+    r->next = NULL;
+    printf("商品的链表文件已建立，有%d个商品记录\n", CurrentCnt);
+}
+
+
+/**********************************************************
+ * insert_item
+ **********************************************************/
+bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
+    GoodsList *temp;
+    GoodsList *pre = L, *p = L->next;
+    int i=1;
+    if (CurrentCnt >= 100) {
+        printf("信息库已满，要插入请先删除一定量的商品数据!\n");
+        return false;
+    }
+
+    switch (choice) {
+        case 0:
+                //尾插法插入新商品
+                /* 补充代码*/
+            while(i<=CurrentCnt) {
+                p=p->next;
+                i++;
+            }
+            
+            temp=(GoodsList*)malloc(sizeof(GoodsList));
+            if(temp==NULL)
+                return false;
+            strcpy(temp->data.goods_id,goodsInfo.goods_id);
+            strcpy(temp->data.goods_name, goodsInfo.goods_name);
+            temp->data.goods_price=goodsInfo.goods_price;
+            strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
+            temp->data.goods_amount=goodsInfo.goods_amount;
+            temp->data.goods_remain=goodsInfo.goods_remain;
+            
+            temp->next=p->next;
+            p->next=temp;
+            
+            return true;
+        case 1:
+                //头插法插入新商品
+                /* 补充代码*/
+            temp=(GoodsList*)malloc(sizeof(GoodsList));
+            
+            strcpy(temp->data.goods_id,goodsInfo.goods_id);
+            strcpy(temp->data.goods_name, goodsInfo.goods_name);
+            temp->data.goods_price=goodsInfo.goods_price;
+            strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
+            temp->data.goods_amount=goodsInfo.goods_amount;
+            temp->data.goods_remain=goodsInfo.goods_remain;
+            
+            temp->next=pre->next;
+            pre->next=temp;
+            
+            return true;
+         default:
+                //中间i号位置插入新商品，例如：输入3，应该在第二个节点后插入新节点
+    // CurrentCnt 改为 CurrentCnt+1，因为当 CurrentCnt 为2时，链表中有两个记录，
+    // 此时输入3，即 choise为 3，表示在第二条记录后插入数据，新记录成为第3条数据
+    if (choice <= CurrentCnt+1 && choice > 0) {
+             /* 补充代码*/
+        while(i<choice) {
+            p=p->next;
+            i++;
+        }
+        temp=(GoodsList*)malloc(sizeof(GoodsList));
+        
+        strcpy(temp->data.goods_id,goodsInfo.goods_id);
+        strcpy(temp->data.goods_name, goodsInfo.goods_name);
+        temp->data.goods_price=goodsInfo.goods_price;
+        strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
+        temp->data.goods_amount=goodsInfo.goods_amount;
+        temp->data.goods_remain=goodsInfo.goods_remain;
+        
+        temp->next=p->next;
+        p->next=temp;
+        
+        return true;
+    }
+    else {
+                printf("输入的位置超出当前商品列表范围\n");
+                return false;
+        }
+    }
+}
+
+
+
+/**********************************************************
+ * delete_item
+ **********************************************************/
+bool delete_item(GoodsList *L, char* goods_id) {
+     GoodsList *pre = L, *p = L->next;
+      /* 补充代码*/
+}
+
+
+/**********************************************************
+ * search_item
+ **********************************************************/
+GoodsList* search_item(GoodsList *L, char* goods_id) {
+    GoodsList *p = L->next;
+    /* 补充代码*/
+}
+
+
+/**********************************************************
+ * change_item
+ **********************************************************/
+bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
+     GoodsList *p = L->next;
+     GoodsList *ptarget = search_item(L, goods_id);
+     /* 补充代码*/
+}
+
+
+/**********************************************************
+ *output_one_item
+ **********************************************************/
+void output_one_item(GoodsList *p){
+    /* 补充代码*/
+}
+
+/**********************************************************
+ * output_all_items
+ **********************************************************/
+void output_all_items(GoodsList *L)
+{
+    /* 补充代码*/
+}
+
+
+/**********************************************************
+ * destory_list
+ **********************************************************/
+void destory_list(GoodsList **L) {
+    if (L == NULL || *L == NULL)
+        return;
+    GoodsList *pre = *L, *p = (*L)->next;
+    /* 补充代码*/
+}
+
+/**********************************************************
+ * destory_list_and_file
+ **********************************************************/
+
+void destory_list_and_file(GoodsList **L) {
+     /* 补充代码：调用destory_list*/
+    remove(GOODS_FILE_NAME);
+}
+/**********************************************************
+ * save_to_file
+ **********************************************************/
+int save_to_file(GoodsList *L) {
+    if(L == NULL)
+        return 0;
+    GoodsList *p = L->next;
+    FILE *fp;
+    if ((fp = fopen("goodsinfo.txt", "w")) == NULL)
+    {
+        printf("提示：不能打开商品文件\n");
+        return 0;
+    }
+    int save_count = 0;
+    while (p != NULL)
+    {
+        fprintf(fp, "%s\t", p->data.goods_id);
+       /* 仿写fprintf完成goodsInfo其他部分的内容*/
+        p = p->next;
+        save_count++;
+    }
+    fclose(fp);
+    return save_count;
+}
+
+
+/**********************************************************
+ * bubble_sort
+ **********************************************************/
+void bubble_sort(GoodsList *L) {
+    GoodsList *p;
+    GoodsInfo temp;
+    int n = CurrentCnt;
+    int i, j;
+    
+    if (L == NULL || L->next == NULL)
+        printf("当前链表中没有商品\n");
+    for (j = 1; j < n; ++j) {
+        p = L->next;
+        for (i = 0; i < n - j; ++i) {
+            if (p->data.goods_price > p->next->data.goods_price) {
+    /* 补充代码*/
+            }
+            p = p->next;
+        }
+    }
+}
+
+
+/**********************************************************
+ * read_goods_info
+ **********************************************************/
+GoodsInfo read_goods_info(){
+    GoodsInfo goodsInfo;
+    printf("输入你要插入的商品信息：\n");
+    printf("商品ID：");
+     /* 补充代码read_line调用*/
+    printf("商品名称：");
+     /* 补充代码read_line调用*/
+    printf("商品价格：");
+    scanf("%d",&goodsInfo.goods_price);
+    printf("商品折扣：");
+     /* 补充代码read_line调用*/
+    printf("商品数量：");
+    scanf("%d", &goodsInfo.goods_amount);
+    printf("商品剩余：");
+    scanf("%d", &goodsInfo.goods_remain);
+    return goodsInfo;
+}
+
+
+
+
+
+////
+////  main.c
+////  17-01
+////
+////  Created by HakuBill on 2020/11/26.
+////
+//
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdbool.h>
+//#include <string.h>
+//#include "lab52.h"
+//
+//extern int CurrentCnt;
+//
+//void init_list(GoodsList **L) {
+//    freopen(GOODS_FILE_NAME, "w", stdin);
+//
+//    GoodsList *HeadNode = (GoodsList*)malloc(sizeof(HeadNode));
+//
+//    HeadNode->data.goods_amount=0;
+//    strcpy(HeadNode->data.goods_discount,"");
+//    HeadNode->data.goods_remain=0;
+//    HeadNode->data.goods_price=0;
+//    strcpy(HeadNode->data.goods_id,"");
+//    strcpy(HeadNode->data.goods_name,"");
+//    HeadNode->next = NULL;
+//
+//    int amount,remain,price;
+//    char discount[MAX_DISCOUNT_LEN];
+//    char id[MAX_ID_LEN];
+//    char name[MAX_NAME_LEN];
+//
+//    GoodsList *currentNode=(GoodsList*)HeadNode;
+//    *L=currentNode;
+//    while(scanf("%s%s%d%s%d%d",&id,&name,&price,&discount,&amount,&remain)!=EOF) {
+//
+//        strcpy(currentNode->data.goods_id,id);
+//        strcpy(currentNode->data.goods_name,name);
+//        currentNode->data.goods_price=price;
+//        strcpy(currentNode->data.goods_discount,discount);
+//        currentNode->data.goods_amount=amount;
+//        currentNode->data.goods_remain=remain;
+//
+//        currentNode->next=(GoodsList*)malloc(sizeof(GoodsList));
+//        currentNode=currentNode->next;
+//    }
+//
+//    currentNode=currentNode->next;
+//}
+//
+//bool insert_item(GoodsList *L,GoodsInfo goodsInfo, int choice) {
+//
+//    return true;
+//}
+//
+//int main(int argc, const char * argv[]) {
+//    int input;
+//    GoodsList *L = NULL;
+//    int goods_id;
+//    GoodsInfo item;
+//    GoodsInfo new_info;
+//    GoodsList **pL = NULL;
+//    char* goods_ids=NULL;
+//    char str[1000];
+//    int choice = 0;
+//    int n = 0;
+//    init_list(pL);
+//    while(1) {
+//        scanf("%d",&input);
+//        getchar();
+//        printf("1.显示所有商品的信息\n2.修改某个商品的信息\n3.插入某个商品的信息\n4.删除某个商品的信息\n5.查找某个商品的信息\n6.商品存盘并退出系统\n7.对商品价格进行排序\n8.(慎用)删除所有内容\n其他.不存盘并退出系统\n");
+//        switch (input) {
+//            case 1: {
+//                output_all_items(L);
+//            }
+//                break;
+//            case 2:
+//                goods_id = read_line(str,n);
+//                change_item(L,goods_ids,new_info);
+//                break;
+//            case 3:
+//                item = read_goods_info();
+//                insert_item(L,item,choice);
+//                break;
+//            case 4:
+//                goods_id=read_line(str,n);
+//                delete_item(L,goods_ids);
+//                break;
+//            case 5:
+//                goods_id=read_line(str,n);
+//                search_item(L,goods_ids);
+//                break;
+//            case 6:
+//                save_to_file(L);
+//                return 0;
+//                break;
+//            case 7:
+//                bubble_sort(L);
+//                break;
+//            case 8:
+//                destory_list_and_file(pL);
+//                destory_list(pL);
+//                break;
+//            default:
+//                destory_list(pL);
+//                return 0;
+//                break;
+//        }
+//    }
+//    return 0;
+//}
