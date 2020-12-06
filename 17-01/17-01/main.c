@@ -149,33 +149,28 @@ void init_list(GoodsList **L) {
     FILE *fp;
     GoodsInfo goodsInfo;
     GoodsList *p, *r;
-
+    
     (*L) = (GoodsList *)malloc(sizeof(GoodsList));
     r = (*L);
     if ((fp = fopen(GOODS_FILE_NAME, "r")) == NULL)
     {
         if ((fp = fopen(GOODS_FILE_NAME, "w")) == NULL)
-    printf("提示：不能创建商品文件\n");
+            printf("提示：不能创建商品文件\n");
     }
     else {
         while (!feof(fp))
         {
             fscanf(fp, "%s", goodsInfo.goods_id);
             /* 仿写fscanf完成goodsInfo其他部分的内容*/
-            fscanf(fp, "%s", goodsInfo.goods_name);
-            fscanf(fp, "%d", goodsInfo.goods_price);
-            fscanf(fp, "%s", goodsInfo.goods_discount);
-            fscanf(fp, "%d", goodsInfo.goods_amount);
-            fscanf(fp, "%d", goodsInfo.goods_remain);
+            fscanf(fp, "\t%s", goodsInfo.goods_name);
+            fscanf(fp, "\t%d", &goodsInfo.goods_price);
+            fscanf(fp, "\t%s", goodsInfo.goods_discount);
+            fscanf(fp, "\t%d", &goodsInfo.goods_amount);
+            fscanf(fp, "\t%d", &goodsInfo.goods_remain);
             p = (GoodsList*)malloc(sizeof(GoodsList));
             /* 完成GoodsList的构建*/
             
-            strcpy(r->data.goods_id, goodsInfo.goods_id);
-            strcpy(r->data.goods_name, goodsInfo.goods_name);
-            r->data.goods_price=goodsInfo.goods_price;
-            strcpy(r->data.goods_discount, goodsInfo.goods_discount);
-            r->data.goods_amount=goodsInfo.goods_amount;
-            r->data.goods_remain=goodsInfo.goods_remain;
+            r->data=goodsInfo;
             
             r->next=(GoodsList*)malloc(sizeof(GoodsList));
             r=r->next;
@@ -204,40 +199,33 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
         case 0:
                 //尾插法插入新商品
                 /* 补充代码*/
-            while(i<=CurrentCnt) {
+            while(p!=NULL) {
+                pre=p;
                 p=p->next;
-                i++;
             }
             
             temp=(GoodsList*)malloc(sizeof(GoodsList));
             if(temp==NULL)
                 return false;
-            strcpy(temp->data.goods_id,goodsInfo.goods_id);
-            strcpy(temp->data.goods_name, goodsInfo.goods_name);
-            temp->data.goods_price=goodsInfo.goods_price;
-            strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
-            temp->data.goods_amount=goodsInfo.goods_amount;
-            temp->data.goods_remain=goodsInfo.goods_remain;
+
+            temp->data=goodsInfo;
             
-            temp->next=p->next;
-            p->next=temp;
+            temp->next=p;
+            pre->next=temp;
             
+            CurrentCnt++;
             return true;
         case 1:
                 //头插法插入新商品
                 /* 补充代码*/
             temp=(GoodsList*)malloc(sizeof(GoodsList));
             
-            strcpy(temp->data.goods_id,goodsInfo.goods_id);
-            strcpy(temp->data.goods_name, goodsInfo.goods_name);
-            temp->data.goods_price=goodsInfo.goods_price;
-            strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
-            temp->data.goods_amount=goodsInfo.goods_amount;
-            temp->data.goods_remain=goodsInfo.goods_remain;
+            temp->data=goodsInfo;
             
             temp->next=pre->next;
             pre->next=temp;
             
+            CurrentCnt++;
             return true;
          default:
                 //中间i号位置插入新商品，例如：输入3，应该在第二个节点后插入新节点
@@ -251,16 +239,12 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
         }
         temp=(GoodsList*)malloc(sizeof(GoodsList));
         
-        strcpy(temp->data.goods_id,goodsInfo.goods_id);
-        strcpy(temp->data.goods_name, goodsInfo.goods_name);
-        temp->data.goods_price=goodsInfo.goods_price;
-        strcpy(temp->data.goods_discount,goodsInfo.goods_discount);
-        temp->data.goods_amount=goodsInfo.goods_amount;
-        temp->data.goods_remain=goodsInfo.goods_remain;
+        temp->data=goodsInfo;
         
         temp->next=p->next;
         p->next=temp;
         
+        CurrentCnt++;
         return true;
     }
     else {
