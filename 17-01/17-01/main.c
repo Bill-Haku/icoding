@@ -166,14 +166,13 @@ void init_list(GoodsList **L) {
             fscanf(fp, "\t%d", &goodsInfo.goods_price);
             fscanf(fp, "\t%s", goodsInfo.goods_discount);
             fscanf(fp, "\t%d", &goodsInfo.goods_amount);
-            fscanf(fp, "\t%d", &goodsInfo.goods_remain);
+            fscanf(fp, "\t%d\n", &goodsInfo.goods_remain);
             p = (GoodsList*)malloc(sizeof(GoodsList));
             /* 完成GoodsList的构建*/
+            p->data=goodsInfo;
             
-            r->data=goodsInfo;
-            
-            r->next=(GoodsList*)malloc(sizeof(GoodsList));
-            r=r->next;
+            r->next=p;
+            r=p;
             CurrentCnt++;
         }
     }
@@ -234,6 +233,7 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
     if (choice <= CurrentCnt+1 && choice > 0) {
              /* 补充代码*/
         while(i<choice) {
+            pre=p;
             p=p->next;
             i++;
         }
@@ -241,8 +241,8 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
         
         temp->data=goodsInfo;
         
-        temp->next=p->next;
-        p->next=temp;
+        temp->next=pre->next;
+        pre->next=temp;
         
         CurrentCnt++;
         return true;
