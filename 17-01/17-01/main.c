@@ -262,11 +262,12 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
 bool delete_item(GoodsList *L, char* goods_id) {
      GoodsList *pre = L, *p = L->next;
       /* 补充代码*/
-    while(p->data.goods_id!=goods_id&&p->next!=NULL) {
+    while(p->data.goods_id!=goods_id) {
         pre=p;
         p=p->next;
     }
     pre->next=p->next;
+    CurrentCnt--;
     free(p);
     
     return true;
@@ -279,8 +280,19 @@ bool delete_item(GoodsList *L, char* goods_id) {
 GoodsList* search_item(GoodsList *L, char* goods_id) {
     GoodsList *p = L->next;
     /* 补充代码*/
-    
-    return true;
+    int i=1;
+    while(p->data.goods_id!=goods_id) {
+        p=p->next;
+        i++;
+        if(i>CurrentCnt)
+            break;
+    }
+    if(i>CurrentCnt) {
+        return NULL;
+    }
+    else {
+        return p;
+    }
 }
 
 
