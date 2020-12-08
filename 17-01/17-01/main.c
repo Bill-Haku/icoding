@@ -280,14 +280,10 @@ bool delete_item(GoodsList *L, char* goods_id) {
 GoodsList* search_item(GoodsList *L, char* goods_id) {
     GoodsList *p = L->next;
     /* 补充代码*/
-    int i=1;
-    while(p->data.goods_id!=goods_id) {
+    while(p->data.goods_id!=goods_id&&p!=NULL) {
         p=p->next;
-        i++;
-        if(i>CurrentCnt)
-            break;
     }
-    if(i>CurrentCnt) {
+    if(p==NULL) {
         return NULL;
     }
     else {
@@ -303,6 +299,7 @@ bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
      GoodsList *p = L->next;
      GoodsList *ptarget = search_item(L, goods_id);
      /* 补充代码*/
+    ptarget->data=new_info;
     return true;
 }
 
@@ -312,6 +309,7 @@ bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
  **********************************************************/
 void output_one_item(GoodsList *p){
     /* 补充代码*/
+    printf("%s\t%s\t%d\t%s\t%d\t%d\n",p->data.goods_id,p->data.goods_name,p->data.goods_price,p->data.goods_discount,p->data.goods_amount,p->data.goods_remain);
 }
 
 /**********************************************************
