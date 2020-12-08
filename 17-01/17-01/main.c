@@ -386,6 +386,9 @@ void bubble_sort(GoodsList *L) {
         for (i = 0; i < n - j; ++i) {
             if (p->data.goods_price > p->next->data.goods_price) {
     /* 补充代码*/
+                temp=p->data;
+                p->data=p->next->data;
+                p->next->data=temp;
             }
             p = p->next;
         }
