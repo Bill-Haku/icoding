@@ -313,6 +313,14 @@ void destory_list(GoodsList **L) {
         return;
     GoodsList *pre = *L, *p = (*L)->next;
     /* 补充代码*/
+    while(pre) {
+        p=pre->next;
+        free(pre);
+        pre=p;
+    }
+    *L=NULL;
+    L=NULL;
+    CurrentCnt=0;
 }
 
 /**********************************************************
