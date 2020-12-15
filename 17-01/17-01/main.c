@@ -55,22 +55,6 @@ GoodsList* search_item(GoodsList *L, char* goods_id);
 bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info);
 void bubble_sort(GoodsList *L);
 
-
-int read_line(char str[], int n)
-{
-    int ch, i = 0;
-
-    while (isspace(ch = getchar()))
-        ;
-    while (ch != '\n' && ch != EOF) {
-        if (i < n)
-            str[i++] = ch;
-        ch = getchar();
-    }
-    str[i] = '\0';
-    return i;
-}
-
 /**********************************************************
  * main
  **********************************************************/
@@ -395,21 +379,40 @@ void bubble_sort(GoodsList *L) {
     }
 }
 
+int read_line(char str[], int n)
+{
+    int ch, i = 0;
+
+    while (isspace(ch = getchar()))
+        ;
+    while (ch != '\n' && ch != EOF) {
+        if (i < n)
+            str[i++] = ch;
+        ch = getchar();
+    }
+    str[i] = '\0';
+    return i;
+}
+
 
 /**********************************************************
  * read_goods_info
  **********************************************************/
 GoodsInfo read_goods_info(){
+    int n = 100;
     GoodsInfo goodsInfo;
     printf("输入你要插入的商品信息：\n");
     printf("商品ID：");
      /* 补充代码read_line调用*/
+    read_line(goodsInfo.goods_id, n);
     printf("商品名称：");
      /* 补充代码read_line调用*/
+    read_line(goodsInfo.goods_name, n);
     printf("商品价格：");
     scanf("%d",&goodsInfo.goods_price);
     printf("商品折扣：");
      /* 补充代码read_line调用*/
+    read_line(goodsInfo.goods_discount, n);
     printf("商品数量：");
     scanf("%d", &goodsInfo.goods_amount);
     printf("商品剩余：");
