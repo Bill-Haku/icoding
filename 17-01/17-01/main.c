@@ -263,13 +263,12 @@ bool delete_item(GoodsList *L, char* goods_id) {
 GoodsList* search_item(GoodsList *L, char* goods_id) {
     GoodsList *p = L->next;
     /* 补充代码*/
-    while((strcmp(p->data.goods_id, goods_id))&&p) {
+    while(p && (strcmp(p->data.goods_id, goods_id))) {
         p=p->next;
     }
-    if(p==NULL) {
+    if(p == NULL) {
         return NULL;
-    }
-    else {
+    } else {
         return p;
     }
 }
