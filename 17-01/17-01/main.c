@@ -242,9 +242,12 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
 bool delete_item(GoodsList *L, char* goods_id) {
      GoodsList *pre = L, *p = L->next;
       /* 补充代码*/
-    while(p&&(strcmp(p->data.goods_id, goods_id)!=0)) {
+    while(p!=NULL&&(strcmp(p->data.goods_id, goods_id)!=0)) {
         pre=p;
         p=p->next;
+    }
+    if (p==NULL) {
+        return false;
     }
     pre->next=p->next;
     CurrentCnt--;
