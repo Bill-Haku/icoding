@@ -322,6 +322,7 @@ void look_up_one() {
 }
 
 void print_out() {
+    freopen("output.txt", "w", stdout);
     
 }
 

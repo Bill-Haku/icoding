@@ -1,27 +1,23 @@
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <stdbool.h>
-
 #include <ctype.h>
 
-
 #define MAX 100
-
 #define GOODS_FILE_NAME "goodsinfo.txt"
-
-
 #define MAX_ID_LEN 30
-
 #define MAX_NAME_LEN 30
-
 #define MAX_PRICE_LEN 30
-
 #define MAX_DISCOUNT_LEN 30
 
+/*
+ 1. 04删除节点：超时
+ 2. 05查找：部分答案错误（错误信息：“链表中含有 ID 为 10 的记录，但查找函数未能正确返回指向该记录的指针，请检查 链表中含有 ID 为 11 的记录，但查找函数未能正确返回指向该记录的指针，请检查 链表中含有 ID 为 15 的记录，但查找函数未能正确返回指向该记录的指针，请检查”）
+ 3.06修改：超时
+ 4.07显示单个节点：答案错误（不知道应该按照怎样的格式输出）
+ 5.08显示所有：超时
+ */
 
 typedef struct {
     char    goods_id[MAX_ID_LEN];
@@ -246,7 +242,7 @@ bool insert_item(GoodsList *L, GoodsInfo goodsInfo, int choice) {
 bool delete_item(GoodsList *L, char* goods_id) {
      GoodsList *pre = L, *p = L->next;
       /* 补充代码*/
-    while(p->data.goods_id!=goods_id) {
+    while(p&&(strcmp(p->data.goods_id, goods_id)!=0)) {
         pre=p;
         p=p->next;
     }
@@ -264,7 +260,7 @@ bool delete_item(GoodsList *L, char* goods_id) {
 GoodsList* search_item(GoodsList *L, char* goods_id) {
     GoodsList *p = L->next;
     /* 补充代码*/
-    while(p->data.goods_id!=goods_id&&p!=NULL) {
+    while((strcmp(p->data.goods_id, goods_id))&&p) {
         p=p->next;
     }
     if(p==NULL) {
@@ -293,6 +289,8 @@ bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
  **********************************************************/
 void output_one_item(GoodsList *p){
     /* 补充代码*/
+    if(p==NULL)
+        return;
     printf("%s\t%s\t%d\t%s\t%d\t%d\n",p->data.goods_id,p->data.goods_name,p->data.goods_price,p->data.goods_discount,p->data.goods_amount,p->data.goods_remain);
 }
 
@@ -301,6 +299,13 @@ void output_one_item(GoodsList *p){
  **********************************************************/
 void output_all_items(GoodsList *L)
 {
+    GoodsList *pre = L;
+    GoodsList *p = L->next;
+    while(pre) {
+        output_one_item(p);
+        pre=p;
+        p=p->next;
+    }
     /* 补充代码*/
 }
 
@@ -329,6 +334,7 @@ void destory_list(GoodsList **L) {
 
 void destory_list_and_file(GoodsList **L) {
      /* 补充代码：调用destory_list*/
+    destory_list(L);
     remove(GOODS_FILE_NAME);
 }
 /**********************************************************
