@@ -281,6 +281,8 @@ bool change_item(GoodsList *L, char* goods_id, GoodsInfo new_info) {
      GoodsList *p = L->next;
      GoodsList *ptarget = search_item(L, goods_id);
      /* 补充代码*/
+    if(ptarget==NULL)
+        return false;
     ptarget->data=new_info;
     return true;
 }
