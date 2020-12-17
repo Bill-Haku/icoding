@@ -5,13 +5,15 @@
 //  Created by HakuBill on 2020/10/22.
 //
 
+//Attention!! There are 3 places you need to pay attention to and change if you don not use macOS!!
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h> // ##If you use Windows OS, change here into <windows.h> please!! ## (If you use macOS or Linux, you don't need to.)
+#include <unistd.h> // ##If you use Windows OS, change here into <windows.h>. ## (If you use macOS or Linux, you don't need to.)
 #include <time.h>
 
-const int maxn=2e6;
+const int MAXN=2e6;
 
 struct student {
     struct score {
@@ -21,36 +23,25 @@ struct student {
         int tot;
         char grade;
     } sc[10][105];   //parameter1: 1 to 6 is for chinese, math, english, physics, chemstry and biology. parameter2: the times of one subject
-    int tot_score;  //total score
+    int tot_score[105];  //total score
     char name[20];
-}stu[maxn];
+}stu[MAXN];
 int all_stu_num;    //the number of students
-char user_name[maxn];
+char user_name[MAXN];
 int user_name_length=1;
 int class_number;
-int test_time=1;
+int allTestTime;
 int hr_type;
-
-//void initialization() {
-//    for(int i=1;i<=maxn-5;i++) {
-//        for (int j=1;j<=8;j++)
-//            for(int k=1;k<=100;k++) {
-//                stu[i].sc[j][k].answer_question = 0;
-//                stu[i].sc[j][k].choice_question = 0;
-//                stu[i].sc[j][k].completion = 0;
-//                }
-//        stu[i].tot_score=0;
-//    }
-//
-//}
+int currentHour, currentMin;
 
 void first_use() {
-//    initialization();
     time_t now;
     struct tm *tm_now;
     time(&now);
     tm_now = localtime(&now);
     int hour = tm_now->tm_hour;
+    currentHour=hour;
+    currentMin=tm_now->tm_min;
     if(hour>=0&&hour<=6)
         hr_type=1;
     else if(hour>=7&&hour<=11)
@@ -86,6 +77,7 @@ void first_use() {
 }
 
 void add_new_for_all() {
+    allTestTime++;
     printf("How many times is this test?    :");
     int test_time;
     scanf("%d",&test_time);
@@ -178,7 +170,7 @@ void add_new_for_all() {
         }
         
         for(int i=1;i<=6;i++)
-            stu[j].tot_score+=stu[j].sc[i][test_time].tot;
+            stu[j].tot_score[test_time]+=stu[j].sc[i][test_time].tot;
         
         printf("\n");
     }
@@ -186,6 +178,7 @@ void add_new_for_all() {
 }
 
 void add_new_for_one() {
+    allTestTime++;
     printf("How many times is this test?    :");
     int test_time;
     scanf("%d",&test_time);
@@ -291,7 +284,7 @@ void look_up_all() {
     printf("\nClass %d Test %d :\n",class_number,test_time);
     printf("Num  Total  Chinese  Math  English  Physics  Chemistry  Biology\n");
     for(int i=1;i<=all_stu_num;i++) {
-        printf("%3d  %5d  %7d  %4d  %7d  %7d  %9d  %7d\n", i,stu[i].tot_score,stu[i].sc[1][test_time].tot,stu[i].sc[2][test_time].tot,stu[i].sc[3][test_time].tot,stu[i].sc[4][test_time].tot,stu[i].sc[5][test_time].tot,stu[i].sc[6][test_time].tot);
+        printf("%3d  %5d  %7d  %4d  %7d  %7d  %9d  %7d\n", i,stu[i].tot_score[test_time],stu[i].sc[1][test_time].tot,stu[i].sc[2][test_time].tot,stu[i].sc[3][test_time].tot,stu[i].sc[4][test_time].tot,stu[i].sc[5][test_time].tot,stu[i].sc[6][test_time].tot);
     }
     
     printf("\n");
@@ -324,35 +317,45 @@ void look_up_one() {
 void print_out() {
     freopen("output.txt", "w", stdout);
     
+    for(int i=1;i<=allTestTime;i++) {
+        printf("Class %d Test %d :\n",class_number,allTestTime);
+        printf("Num  Total  Chinese  Math  English  Physics  Chemistry  Biology\n");
+        for(int j=1;j<=all_stu_num;j++) {
+            printf("%3d  %5d  %7d  %4d  %7d  %7d  %9d  %7d\n", j,stu[j].tot_score[i],stu[j].sc[1][i].tot,stu[j].sc[2][i].tot,stu[j].sc[3][i].tot,stu[j].sc[4][i].tot,stu[j].sc[5][i].tot,stu[j].sc[6][i].tot);
+        }
+        
+        printf("\n");
+
+    }
+    fclose(stdout);
+    freopen("/System/Applications/Utilities/console","w",stdout);
+    // If you use Windows, replace the code above with the code below:
+    //freopen("CON","w",stdout);
+    // If you use Linux, replace the code above with the code below:
+    //freopen("/dev/console","w",stdout);
+    printf("\n");
+
 }
 
 int main(int argc, const char * argv[]) {
-    /*FILE *fpread=fopen("IsNew.txt", "r");
-    if(fpread==NULL) {
-        first_use();
-        FILE *fpwrite=fopen("IsNew.txt", "w");
-        fprintf(fpwrite, "1");
-        fclose(fpwrite);
-    }
-    fclose(fpread);*/
     first_use();
     int task;
     char IsExit;
     switch (hr_type) {
         case 1:
-            
+            printf("Go to sleep please! It's AM %d : %d now.\n", currentHour, currentMin);
             break;
         case 2:
-            
+            printf("Good morning, %s! It's AM %d : %d now.\n", user_name,currentHour, currentMin);
             break;
         case 3:
-            
+            printf("Have a good lunch, %s! It's PM %d : %d now.\n",user_name, currentHour, currentMin);
             break;
         case 4:
-            
+            printf("Gooding afternoon, %s! It's PM %d : %d now.\n", user_name, currentHour, currentMin);
             break;
         case 5:
-            
+            printf("Good evening, %s! It's PM %d : %d now.\n", user_name, currentHour, currentMin);
             break;
     }
     while(1) {
@@ -361,7 +364,7 @@ int main(int argc, const char * argv[]) {
         printf("2   Add a new record for a specific student.\n");
         printf("3   Look up the record of all students.\n");
         printf("4   Look up the record of one specific student.\n");
-        printf("5   Export an Excel form of the records.\n");
+        printf("5   Export a txt form of the records.\n");
         printf("6   Exit the system.\n");
         scanf("%d",&task);
         getchar();
