@@ -299,14 +299,12 @@ void output_one_item(GoodsList *p){
  **********************************************************/
 void output_all_items(GoodsList *L)
 {
-    GoodsList *pre = L;
+    /* 补充代码*/
     GoodsList *p = L->next;
-    while(pre) {
+    while(p!=NULL) {
         output_one_item(p);
-        pre=p;
         p=p->next;
     }
-    /* 补充代码*/
 }
 
 
