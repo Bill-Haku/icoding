@@ -54,7 +54,7 @@ void first_use() {
         hr_type=5;
     
     printf("Welcome to the Student Achievement management System for Middle Schools.\n");
-    sleep(1);   //Change the integer into 1000 if there is no obvious pause in the windows. Same to the blew.
+    sleep(1);   //Change the integer into 1000 if there is no obvious pause in the windows. Same to the blew (in line 59).
     printf("This is a program developed by Bai Jiajun in Octember, 2020.\n");
     sleep(1);
     printf("First of all, please enter your name here and end with an Enter: ");
